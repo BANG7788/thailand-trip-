@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>泰國探險 🐘</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #FF8E72; --secondary: #FFD166; --bg: #FDF6F0; --accent: #74B9FF; --text: #4A4A4A; --pink: #FFACAC; --rain: #70a1ff; --hot: #ff4757; }
+        body { font-family: 'Nunito', 'Noto Sans TC', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; }
+        header { background: linear-gradient(135deg, var(--primary), var(--pink)); color: white; padding: 30px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; box-shadow: 0 4px 15px rgba(255,142,114,0.3); }
+        .countdown-card { background: rgba(255, 255, 255, 0.15); border-radius: 25px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(5px); }
+        .days-number { font-size: 4.5rem; font-weight: 900; line-height: 1; margin: 5px 0; }
+        .days-unit { font-size: 1rem; opacity: 0.8; font-weight: bold; letter-spacing: 2px; }
+        .progress-bar { height: 4px; background: rgba(255,255,255,0.3); border-radius: 10px; margin: 25px 10px 10px; position: relative; }
+        #plane { position: absolute; top: -10px; left: 0%; font-size: 1.2rem; transition: left 1.5s ease-in-out; }
+        .weather-dash { display: flex; justify-content: space-between; align-items: center; background: white; border-radius: 20px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); color: var(--text); margin-top: -10px; }
+        .w-item { display: flex; flex-direction: column; align-items: center; flex: 1; }
+        .w-label { font-size: 0.7rem; color: #999; margin-bottom: 3px; }
+        .w-value { font-size: 1.1rem; font-weight: 900; color: var(--primary); }
+        .w-sep { width: 1px; height: 30px; background: #EEE; }
+        .container { padding: 20px; }
+        .ootd-box { background: white; border-radius: 20px; padding: 15px; margin-bottom: 20px; display: flex; gap: 12px; align-items: center; border: 2px solid var(--secondary); transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .ootd-icon { font-size: 2rem; }
+        .ootd-tag { font-weight: 900; color: var(--text); display: block; font-size: 0.9rem; }
+        .ootd-advise { font-size: 0.85rem; color: #666; line-height: 1.4; }
+        .day-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .day-title { font-size: 1.2rem; font-weight: 900; color: var(--primary); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;}
+        .day-label { background: #FFE5E5; color: var(--primary); padding: 2px 8px; border-radius: 8px; font-size: 0.7rem; }
+        .event { margin-bottom: 15px; padding-left: 15px; border-left: 2px solid #F0F0F0; position: relative; }
+        .event b { color: var(--text); font-size: 0.95rem; }
+        .event span { font-size: 0.75rem; color: #BBB; font-weight: bold; }
+        .map-btn { font-size: 0.7rem; color: #4285F4; text-decoration: none; font-weight: bold; margin-left: 5px; border: 1px solid #4285F4; padding: 1px 5px; border-radius: 5px;}
+        .tab-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: white; height: 65px; border-radius: 20px; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 100; }
+        .tab-item { text-align: center; text-decoration: none; color: #AAA; font-size: 0.7rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="countdown-card">
+        <div style="font-size: 0.9rem; opacity: 0.9;">距離 7/25 泰國探險還有</div>
+        <div class="days-number" id="days-val">--</div>
+        <div class="days-unit">DAYS TO GO</div>
+        <div class="progress-bar"><div id="plane">✈️</div><div style="position:absolute; right: -5px; top: -8px;">🇹🇭</div></div>
+    </div>
+    <div class="weather-dash">
+        <div class="w-item"><span class="w-label">📅 今天日期</span><span class="w-value" id="cur-date">--/--</span></div>
+        <div class="w-sep"></div>
+        <div class="w-item"><span class="w-label">🌡️ 曼谷溫度</span><span class="w-value" id="bgk-temp">--°C</span></div>
+        <div class="w-sep"></div>
+        <div class="w-item"><span class="w-label">☔ 降雨機率</span><span class="w-value" id="bgk-rain">--%</span></div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="ootd-box" id="ootd-box">
+        <div class="ootd-icon" id="ootd-icon">👗</div>
+        <div>
+            <span class="ootd-tag" id="ootd-status">正在計算智慧穿搭...</span>
+            <span class="ootd-advise" id="ootd-advise">正在為您連線氣象預報。</span>
+        </div>
+    </div>
+
+    <div class="day-card" id="day1">
+        <div class="day-title">Day 1 抵達曼谷 <span class="day-label">7/25 (五)</span></div>
+        <div class="event"><span>16:40</span><br><b>抵達曼谷機場 🛬</b></div>
+        <div class="event"><span>18:00</span><br><b>Moxy Hotel Check-in</b><a href="https://maps.app.goo.gl/yLzW7YnN3mZ6mXyS7" class="map-btn">地圖</a></div>
+        <div class="event"><span>19:30</span><br><b>CentralWorld 晚餐逛街</b><a href="https://maps.app.goo.gl/9mS1mC9Xv2pY6mS7" class="map-btn">地圖</a></div>
+    </div>
+
+    <div class="day-card" id="day2">
+        <div class="day-title">Day 2 週末狂歡 <span class="day-label">7/26 (六)</span></div>
+        <div class="event"><span>09:30</span><br><b>恰圖恰週末市集 🛍️</b><a href="https://maps.app.goo.gl/mS1mC9Xv2pY6mS7" class="map-btn">地圖</a></div>
+        <div class="event"><span>14:00</span><br><b>Central Ladprao (吹冷氣)</b></div>
+        <div class="event"><span>16:30</span><br><b>Siam Paragon + 水族館</b><a href="https://maps.app.goo.gl/Xv2pY6mS79mS1mC9" class="map-btn">地圖</a></div>
+        <div class="event"><span>19:00</span><br><b>朱拉隆功美食街 (Banthat Thong)</b></div>
+    </div>
+
+    <div class="day-card" id="day3">
+        <div class="day-title">Day 3 動物園日 <span class="day-label">7/27 (日)</span></div>
+        <div class="event"><span>10:00</span><br><b>大城動物園 Lion Park 🦒</b><a href="https://maps.app.goo.gl/79mS1mC9Xv2pY6mS" class="map-btn">地圖</a></div>
+        <div class="event"><span>13:00</span><br><b>大城 Grand Chaopraya 午餐</b></div>
+        <div class="event"><span>16:00</span><br><b>返回曼谷 / 喬德夜市</b></div>
+    </div>
+
+    <div class="day-card" id="day4">
+        <div class="day-title">Day 4 泰服體驗 <span class="day-label">7/28 (一)</span></div>
+        <div class="event"><span>09:30</span><br><b>Mahasané 換傳統泰服 📸</b></div>
+        <div class="event"><span>10:30</span><br><b>鄭王廟拍照 🛕</b><a href="https://maps.app.goo.gl/Xv2pY6mS79mS1mC9" class="map-btn">地圖</a></div>
+        <div class="event"><span>14:00</span><br><b>ICONSIAM 豪華百貨</b><a href="https://maps.app.goo.gl/mS1mC9Xv2pY6mS7" class="map-btn">地圖</a></div>
+        <div class="event"><span>18:00</span><br><b>河濱碼頭夜市 (Asiatique)</b></div>
+    </div>
+
+    <div class="day-card" id="day5">
+        <div class="day-title">Day 5 曼谷悠閒 <span class="day-label">7/29 (二)</span></div>
+        <div class="event"><span>11:00</span><br><b>After You 泰奶刨冰 🍧</b></div>
+        <div class="event"><span>14:00</span><br><b>Big C 零食大採購</b></div>
+        <div class="event"><span>18:00</span><br><b>Erawan 四面佛參拜</b></div>
+    </div>
+
+    <div class="day-card" id="day6">
+        <div class="day-title">Day 6 往芭達雅 <span class="day-label">7/30 (三)</span></div>
+        <div class="event"><span>10:00</span><br><b>包車前往芭達雅 🚗</b></div>
+        <div class="event"><span>12:30</span><br><b>Pa Boon Café 5 親子餐廳</b></div>
+        <div class="event"><span>15:00</span><br><b>Somerset Pattaya 入住 🏨</b></div>
+        <div class="event"><span>16:50</span><br><b>The Sky Gallery 夕陽晚餐 🌊</b><a href="https://maps.app.goo.gl/mS1mC9Xv2pY6mS7" class="map-btn">地圖</a></div>
+    </div>
+
+    <div class="day-card" id="day7">
+        <div class="day-title">Day 7 芭達雅絕景 <span class="day-label">7/31 (四)</span></div>
+        <div class="event"><span>10:00</span><br><b>真理寺 (Sanctuary of Truth)</b><a href="https://maps.app.goo.gl/Xv2pY6mS79mS1mC9" class="map-btn">地圖</a></div>
+        <div class="event"><span>14:00</span><br><b>Terminal 21 Pattaya 逛街</b></div>
+        <div class="event"><span>19:00</span><br><b>蒂芬妮人妖秀 (Tiffany's Show)</b></div>
+    </div>
+
+    <div class="day-card" id="day8">
+        <div class="day-title">Day 8 快樂返台 <span class="day-label">8/01 (五)</span></div>
+        <div class="event"><span>09:00</span><br><b>飯店早餐 / 泳池玩水 🏊</b></div>
+        <div class="event"><span>12:00</span><br><b>出發前往 BKK 機場</b></div>
+        <div class="event"><span>17:30</span><br><b>班機起飛 ✈️</b></div>
+    </div>
+</div>
+
+<div class="tab-bar">
+    <a href="#" class="tab-item" style="color:var(--primary);"><span style="font-size:1.4rem; display:block;">🏠</span>首頁</a>
+    <a href="https://www.google.com/search?q=THB+to+TWD" class="tab-item" target="_blank"><span style="font-size:1.4rem; display:block;">🪙</span>匯率</a>
+    <a href="tel:+6622095999" class="tab-item"><span style="font-size:1.4rem; display:block;">📞</span>飯店</a>
+    <a href="javascript:location.reload()" class="tab-item"><span style="font-size:1.4rem; display:block;">🔄</span>更新</a>
+</div>
+
+<script>
+    async function initApp() {
+        const now = new Date();
+        const target = new Date(2026, 6, 25);
+        const diff = target - now;
+        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+        document.getElementById('days-val').innerText = days > 0 ? days : 0;
+        let prog = Math.max(0, Math.min(95, 100 - (days / 60 * 100)));
+        setTimeout(() => { document.getElementById('plane').style.left = prog + "%"; }, 500);
+        const week = ['日', '一', '二', '三', '四', '五', '六'];
+        document.getElementById('cur-date').innerText = `${now.getMonth()+1}/${now.getDate()} (${week[now.getDay()]})`;
+        await updateWeatherAndOOTD();
+    }
+
+    async function updateWeatherAndOOTD() {
+        const box = document.getElementById('ootd-box');
+        const icon = document.getElementById('ootd-icon');
+        const status = document.getElementById('ootd-status');
+        const advise = document.getElementById('ootd-advise');
+        try {
+            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=13.75&longitude=100.51&hourly=precipitation_probability&current_weather=true&timezone=Asia%2FBangkok');
+            const data = await res.json();
+            const temp = Math.round(data.current_weather.temperature);
+            const currentHour = new Date().getHours();
+            const rain = data.hourly.precipitation_probability[currentHour];
+            document.getElementById('bgk-temp').innerText = temp + "°C";
+            document.getElementById('bgk-rain').innerText = rain + "%";
+            if (rain > 40) {
+                icon.innerText = "☔"; status.innerText = "今日建議：雨天防護"; box.style.borderColor = "var(--rain)";
+                advise.innerText = "曼谷降雨機率高，出門請帶傘，建議穿涼鞋，不怕淋濕！";
+            } else if (temp >= 33) {
+                icon.innerText = "☀️"; status.innerText = "今日建議：抗暑模式"; box.style.borderColor = "var(--hot)";
+                advise.innerText = "氣溫極高！建議背心短褲，記得補水跟墨鏡防曬。";
+            } else {
+                icon.innerText = "👗"; status.innerText = "今日建議：完美度假風"; box.style.borderColor = "var(--secondary)";
+                advise.innerText = "氣候舒適，適合穿洋裝拍照！百貨冷氣強可備薄外套。";
+            }
+        } catch (e) {
+            status.innerText = "連線氣象中...";
+            advise.innerText = "無法取得即時氣象，建議穿著輕便服飾。";
+        }
+    }
+    initApp();
+</script>
+</body>
+</html>
