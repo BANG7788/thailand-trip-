@@ -8,15 +8,18 @@
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #FDF6F0; }
         iframe {
             position: absolute;
-            
             left: 0;
             width: 100%;
-            height: calc(100%); /* 補回推移的高度 */
+            height: 100%; 
             border: none;
         }
     </style>
 </head>
 <body>
-    <iframe src="https://script.google.com/macros/s/AKfycbw98eYW5M_DOuEbSsWYRqRulSIn75UdeZiZEDS6FSvrn8H11_fuZkfXYYA2j_wGEo3vxA/exec"></iframe>
+    <!-- 關鍵修正：加上 allow="geolocation" 屬性，把 GPS 定位權限穿透給裡面的網頁 -->
+    <iframe 
+        src="https://script.google.com/macros/s/AKfycbw98eYW5M_DOuEbSsWYRqRulSIn75UdeZiZEDS6FSvrn8H11_fuZkfXYYA2j_wGEo3vxA/exec" 
+        allow="geolocation">
+    </iframe>
 </body>
 </html>
